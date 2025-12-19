@@ -1,6 +1,6 @@
 use kvm_ioctls::{Kvm, Error, VmFd};
 
-struct Hypervisor {
+pub(crate) struct Hypervisor {
 	//Hold the kvm instance to keep /dev/kvm open
 	kvm: Kvm,
 }
