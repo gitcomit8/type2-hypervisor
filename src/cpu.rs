@@ -13,33 +13,7 @@ impl Cpu{
 		Ok(Cpu{fd,id})
 	}
 
-	pub fn run(&mut self)->Result<(),Error>{
-		loop{
-			// Switch step
-			// block here while hw runs guest
-			match self.fd.run(){
-				Ok(exit_reason)=>{
-					match exit_reason{
-						// TODO: handle specific exit reasons
-						kvm_ioctls::VcpuExit::IoIn(addr,data)=>{
-							println!("IO IN at {:#x}",addr);
-						}
-						kvm_ioctls::VcpuExit::IoOut(addr,data)=>{
-							println!("IO OUT at {:#x}",addr);
-						}
-						kvm_ioctls::VcpuExit::Hlt => {
-							println!("vCPU {} Halted",self.id);
-							break;
-						}
-						_ =>{
-							println!("unexpected exit reason");
-							break;
-						}
-					}
-				}
-				Err(e)=> return Err(e),
-			}
-		}
-		Ok(())
+	pub fn run_once(&mut self)-> Result<kvm_ioctls::VcpuExit,Error>{
+		self.fd.run()
 	}
 }
