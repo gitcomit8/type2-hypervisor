@@ -41,13 +41,7 @@ impl Vmm{
 
 	// Load raw code into guest memory at specified offset
 	pub fn load_code(&mut self, code: &[u8], offset: usize){
-		// Safety: verified bounds before copying
-		if offset + code.len()> self.memory.mem.len(){
-			panic!("Code too large for guest memory!");
-		}
-
-		let dest = &mut self.memory.mem[offset..offset + code.len()];
-		dest.copy_from_slice(code);
+		self.memory.write_slice(code, offset);
 	}
 
 	// Main loop: runs cpu and handles exits
